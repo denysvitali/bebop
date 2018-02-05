@@ -19,6 +19,12 @@ var BebopComments = Vue.component("bebop-comments", {
       </div>
       <div v-else>
 
+        <div class="comments-comment-top-buttons">
+			<router-link :to="'/c/' + topic.categoryId" style="float=right" class="btn btn-primary btn-sm">
+				<i class="fa fa-reply"></i> Topics
+			</router-link>
+     </div>
+
         <h2>{{topic.title}}</h2>
 
         <nav v-if="lastPage > 1">

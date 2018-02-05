@@ -26,9 +26,14 @@ var BebopTopics = Vue.component("bebop-topics", {
           <a class="btn btn-primary btn-sm" role="button" @click="load">
             <i class="fa fa-refresh"></i> Refresh
           </a>
-        </div>
+			<router-link to="/" style="float=right" class="btn btn-primary btn-sm">
+				<i class="fa fa-reply"></i> Categories
+			</router-link>
+     </div>
 
-        <h2 class="topics-category-title">Topics in "{{category.title}}"</h2>
+        <div class="topics-category-title">
+			{{category.title}}
+		</div>
 
         <nav v-if="page > 1">
           <ul class="pagination pagination-sm">

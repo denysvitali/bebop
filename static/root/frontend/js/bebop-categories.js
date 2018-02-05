@@ -42,12 +42,12 @@ var BebopCategories = Vue.component("bebop-categories", {
         <div v-for="category in categories" class="card categories-category">
           <div class="categories-category-title">
             <router-link :to="'/c/' + category.id">{{category.title}}</router-link>
-          </div>
           <div class="categories-category-info">
                 <span class="info-separator"> | </span>
                 <i class="fa fa-comment-o"></i> {{category.topicCount}}
                 <span class="info-separator"> | </span>
                 <i class="fa fa-clock-o"></i> <span :title="category.lastTopicAt|formatTime">{{category.lastTopicAt|formatTimeAgo}}</span>
+          </div>
           </div>
           <div class="categories-category-admin-tools" v-if="auth.authenticated && auth.user.admin">
                 <a class="a-tool" role="button" @click="delCategory(category.id)"><i class="fa fa-times" aria-hidden="true"></i> delete category</a>

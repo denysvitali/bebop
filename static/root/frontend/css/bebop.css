@@ -24,7 +24,18 @@ h3 { margin: 10px 5px; font-size: 2.0rem; color: #333; }
 
 .card { background-color: #fff; border-top: #ccc 1px dashed; }
 
+.categories-category { margin: 2px 0; padding: 2px 0; }
+.categories-title { font-size: 3rem; padding-left: 5px;}
+.categories-category-title { font-size: 2rem; padding-left: 5px;}
+.categories-category-descr { font-size: 1.5rem; padding-left: 5px;}
+.categories-category-info { font-size: 1.2rem; color: #777; padding-right: 5px; margin-top: 2px; float:right; }
+.categories-category-admin-tools { padding-left: 5px; font-size: 1.2rem; color: #d55; margin-top: 2px; }
+.categories-category-admin-tools a { color: #d55; }
+.categories-category-admin-tools a:hover { color: #f55; text-decoration: none; }
+.categories-category-top-buttons { margin: 10px 5px; }
+
 .topics-topic { margin: 2px 0; padding: 2px 0; }
+.topics-category-title { font-size: 2rem; padding-left: 5px;}
 .topics-topic-title { font-size: 1.5rem; padding-left: 5px;}
 .topics-topic-info { font-size: 1.2rem; color: #777; padding-left: 5px; margin-top: 2px; }
 .topics-topic-admin-tools { padding-left: 5px; font-size: 1.2rem; color: #d55; margin-top: 2px; }
@@ -40,6 +51,8 @@ h3 { margin: 10px 5px; font-size: 2.0rem; color: #333; }
 .comments-comment-admin-tools a { color: #d55; }
 .comments-comment-admin-tools a:hover { color: #f55; text-decoration: none; }
 .comments-comment-new { margin: 15px 5px; }
+.comments-comment-top-buttons { margin: 10px 5px; }
+
 
 .comments-comment-content h1, .md-preview h1 { font-size: 2.2rem; color: #333; margin: 10px 0; }
 .comments-comment-content h2, .md-preview h2 { font-size: 2.1rem; color: #333; margin: 10px 0; }
