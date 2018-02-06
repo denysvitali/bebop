@@ -8,6 +8,7 @@ import (
 // Category is a general theme of topics.
 type Category struct {
 	ID          int64     `json:"id"`
+	ParentID    int64     `json:"parentId"`
 	AuthorID    int64     `json:"authorId"`
 	Title       string    `json:"title"`
 	Description string    `json:"description"`
@@ -19,7 +20,7 @@ type Category struct {
 const (
 	categoryTitleMinLen       = 1
 	categoryTitleMaxLen       = 100
-	categoryDescriptionMinLen = 1
+	categoryDescriptionMinLen = 0
 	categoryDescriptionMaxLen = 100
 )
 

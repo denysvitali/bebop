@@ -29,6 +29,7 @@ func TestHandleGetCategories(t *testing.T) {
 						return []*store.Category{
 							{
 								ID:          1,
+								ParentID:    0,
 								AuthorID:    1,
 								Title:       "Cat1",
 								Description: "Descr1",
@@ -38,6 +39,7 @@ func TestHandleGetCategories(t *testing.T) {
 							},
 							{
 								ID:          2,
+								ParentID:    0,
 								AuthorID:    2,
 								Title:       "Cat2",
 								Description: "Descr2",
@@ -67,14 +69,14 @@ func TestHandleGetCategories(t *testing.T) {
 		{
 			desc:     "no offset",
 			wantCode: http.StatusOK,
-			wantBody: `{"categories":[{"id":1,"authorId":1,"title":"Cat1","description":"Descr1","createdAt":"2001-02-03T04:05:06Z","lastTopicAt":"2001-02-03T04:05:06Z","topicCount":10},{"id":2,"authorId":2,"title":"Cat2","description":"Descr2","createdAt":"2001-02-03T04:05:06Z","lastTopicAt":"2001-02-03T04:05:06Z","topicCount":20}],"count":2}`,
+			wantBody: `{"categories":[{"id":1,"parentId":0,"authorId":1,"title":"Cat1","description":"Descr1","createdAt":"2001-02-03T04:05:06Z","lastTopicAt":"2001-02-03T04:05:06Z","topicCount":10},{"id":2,"parentId":0,"authorId":2,"title":"Cat2","description":"Descr2","createdAt":"2001-02-03T04:05:06Z","lastTopicAt":"2001-02-03T04:05:06Z","topicCount":20}],"count":2}`,
 		},
 		{
 			desc:     "offset 0",
 			offset:   "0",
 			limit:    "100",
 			wantCode: http.StatusOK,
-			wantBody: `{"categories":[{"id":1,"authorId":1,"title":"Cat1","description":"Descr1","createdAt":"2001-02-03T04:05:06Z","lastTopicAt":"2001-02-03T04:05:06Z","topicCount":10},{"id":2,"authorId":2,"title":"Cat2","description":"Descr2","createdAt":"2001-02-03T04:05:06Z","lastTopicAt":"2001-02-03T04:05:06Z","topicCount":20}],"count":2}`,
+			wantBody: `{"categories":[{"id":1,"parentId":0,"authorId":1,"title":"Cat1","description":"Descr1","createdAt":"2001-02-03T04:05:06Z","lastTopicAt":"2001-02-03T04:05:06Z","topicCount":10},{"id":2,"parentId":0,"authorId":2,"title":"Cat2","description":"Descr2","createdAt":"2001-02-03T04:05:06Z","lastTopicAt":"2001-02-03T04:05:06Z","topicCount":20}],"count":2}`,
 		},
 		{
 			desc:     "offset 100",
@@ -336,6 +338,7 @@ func TestHandleGetCategory(t *testing.T) {
 					case 1:
 						return &store.Category{
 							ID:          1,
+							ParentID:    0,
 							AuthorID:    1,
 							Title:       "Cat1",
 							Description: "Descr1",
@@ -360,7 +363,7 @@ func TestHandleGetCategory(t *testing.T) {
 			desc:     "found",
 			id:       "1",
 			wantCode: http.StatusOK,
-			wantBody: `{"category":{"id":1,"authorId":1,"title":"Cat1","description":"Descr1","createdAt":"2001-02-03T04:05:06Z","lastTopicAt":"2001-02-03T04:05:06Z","topicCount":10}}`,
+			wantBody: `{"category":{"id":1,"parentId":0,"authorId":1,"title":"Cat1","description":"Descr1","createdAt":"2001-02-03T04:05:06Z","lastTopicAt":"2001-02-03T04:05:06Z","topicCount":10}}`,
 		},
 		{
 			desc:     "not found",

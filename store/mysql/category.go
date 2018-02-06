@@ -13,13 +13,14 @@ type categoryStore struct {
 
 func (s *categoryStore) New(authorID int64, title, description string) (int64, error) {
 	now := time.Now()
-
+	// FIXME:
+	var parentID int64
 	res, err := s.db.Exec(
 		`
-			insert into categories(author_id, title, description, created_at, last_topic_at)
-			values(?, ?, ?, ?, ?)
+			insert into categories(parent_id, author_id, title, description, created_at, last_topic_at)
+			values(?, ?, ?, ?, ?, ?)
 		`,
-		authorID, title, description, now, now,
+		parentID, authorID, title, description, now, now,
 	)
 	if err != nil {
 		return 0, err
@@ -28,11 +29,11 @@ func (s *categoryStore) New(authorID int64, title, description string) (int64, e
 	return res.LastInsertId()
 }
 
-const selectFromCategories = `select id, author_id, title, description, created_at, last_topic_at, topic_count from categories`
+const selectFromCategories = `select id, parent_id, author_id, title, description, created_at, last_topic_at, topic_count from categories`
 
 func (s *categoryStore) scanCategory(scanner scanner) (*store.Category, error) {
 	c := new(store.Category)
-	err := scanner.Scan(&c.ID, &c.AuthorID, &c.Title, &c.Description, &c.CreatedAt, &c.LastTopicAt, &c.TopicCount)
+	err := scanner.Scan(&c.ID, &c.ParentID, &c.AuthorID, &c.Title, &c.Description, &c.CreatedAt, &c.LastTopicAt, &c.TopicCount)
 	if err == sql.ErrNoRows {
 		return nil, store.ErrNotFound
 	}

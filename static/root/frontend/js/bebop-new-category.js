@@ -49,7 +49,7 @@ var BebopNewCategory = Vue.component("bebop-new-category", {
         return;
       }
       var description = $("#description-input").val().trim();
-      if (description.length < 1 || description.length > 10000) {
+      if (description.length < 0 || description.length > 10000) {
         this.showErrorMessage("Invalid category description");
         return;
       }

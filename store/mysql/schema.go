@@ -21,6 +21,7 @@ var migrate = []string{
 		create table if not exists categories (
 			id               bigint        not null auto_increment,
 			author_id        bigint        not null references users(id),
+			parent_id        bigint        not null references categories(id),
 			title            varchar(200)  not null,
 			description      varchar(200)  not null,
 			created_at       datetime(6)   not null,
