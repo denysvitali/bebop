@@ -22,6 +22,7 @@ var migrate = []string{
 			id               bigint        not null auto_increment,
 			author_id        bigint        not null references users(id),
 			title            varchar(200)  not null,
+			description      varchar(200)  not null,
 			created_at       datetime(6)   not null,
 			last_topic_at    datetime(6)   not null,
 			deleted          boolean       not null default false,

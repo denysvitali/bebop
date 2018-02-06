@@ -70,7 +70,8 @@ func (h *Handler) handleNewCategory(w http.ResponseWriter, r *http.Request) {
 	}
 
 	req := struct {
-		Title *string `json:"title"`
+		Title       *string `json:"title"`
+		Description *string `json:"description"`
 	}{}
 
 	err := h.parseRequest(r, &req)
@@ -84,7 +85,12 @@ func (h *Handler) handleNewCategory(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	id, err := h.Store.Categories().New(currentUser.ID, *req.Title)
+	if req.Description == nil || !store.ValidCategoryDescription(*req.Description) {
+		h.renderError(w, http.StatusBadRequest, "BadRequest", "Invalid category description")
+		return
+	}
+
+	id, err := h.Store.Categories().New(currentUser.ID, *req.Title, *req.Description)
 	if err != nil {
 		h.logError("create category: %s", err)
 		h.renderError(w, http.StatusInternalServerError, "ServerError", "Server error")

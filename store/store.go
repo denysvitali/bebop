@@ -36,10 +36,11 @@ type UserStore interface {
 
 // CategoryStore is a bebop category data store interface.
 type CategoryStore interface {
-	New(authorID int64, title string) (int64, error)
+	New(authorID int64, title, description string) (int64, error)
 	Get(id int64) (*Category, error)
 	GetLatest(offset, limit int) ([]*Category, int, error)
 	SetTitle(id int64, title string) error
+	SetDescription(id int64, description string) error
 	Delete(id int64) error
 }
 

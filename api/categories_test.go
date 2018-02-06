@@ -31,6 +31,7 @@ func TestHandleGetCategories(t *testing.T) {
 								ID:          1,
 								AuthorID:    1,
 								Title:       "Cat1",
+								Description: "Descr1",
 								CreatedAt:   testTime,
 								LastTopicAt: testTime,
 								TopicCount:  10,
@@ -39,6 +40,7 @@ func TestHandleGetCategories(t *testing.T) {
 								ID:          2,
 								AuthorID:    2,
 								Title:       "Cat2",
+								Description: "Descr2",
 								CreatedAt:   testTime,
 								LastTopicAt: testTime,
 								TopicCount:  20,
@@ -65,14 +67,14 @@ func TestHandleGetCategories(t *testing.T) {
 		{
 			desc:     "no offset",
 			wantCode: http.StatusOK,
-			wantBody: `{"categories":[{"id":1,"authorId":1,"title":"Cat1","createdAt":"2001-02-03T04:05:06Z","lastTopicAt":"2001-02-03T04:05:06Z","topicCount":10},{"id":2,"authorId":2,"title":"Cat2","createdAt":"2001-02-03T04:05:06Z","lastTopicAt":"2001-02-03T04:05:06Z","topicCount":20}],"count":2}`,
+			wantBody: `{"categories":[{"id":1,"authorId":1,"title":"Cat1","description":"Descr1","createdAt":"2001-02-03T04:05:06Z","lastTopicAt":"2001-02-03T04:05:06Z","topicCount":10},{"id":2,"authorId":2,"title":"Cat2","description":"Descr2","createdAt":"2001-02-03T04:05:06Z","lastTopicAt":"2001-02-03T04:05:06Z","topicCount":20}],"count":2}`,
 		},
 		{
 			desc:     "offset 0",
 			offset:   "0",
 			limit:    "100",
 			wantCode: http.StatusOK,
-			wantBody: `{"categories":[{"id":1,"authorId":1,"title":"Cat1","createdAt":"2001-02-03T04:05:06Z","lastTopicAt":"2001-02-03T04:05:06Z","topicCount":10},{"id":2,"authorId":2,"title":"Cat2","createdAt":"2001-02-03T04:05:06Z","lastTopicAt":"2001-02-03T04:05:06Z","topicCount":20}],"count":2}`,
+			wantBody: `{"categories":[{"id":1,"authorId":1,"title":"Cat1","description":"Descr1","createdAt":"2001-02-03T04:05:06Z","lastTopicAt":"2001-02-03T04:05:06Z","topicCount":10},{"id":2,"authorId":2,"title":"Cat2","description":"Descr2","createdAt":"2001-02-03T04:05:06Z","lastTopicAt":"2001-02-03T04:05:06Z","topicCount":20}],"count":2}`,
 		},
 		{
 			desc:     "offset 100",
@@ -206,9 +208,9 @@ func TestHandleNewCategory(t *testing.T) {
 				},
 			},
 			CategoryStore: &mock.CategoryStore{
-				OnNew: func(authorID int64, title string) (int64, error) {
-					if authorID != 1 || title != "Cat1" {
-						t.Fatalf("CategoryStore.OnNew: unexpected params: %d, %q", authorID, title)
+				OnNew: func(authorID int64, title, descr string) (int64, error) {
+					if authorID != 1 || title != "Cat1" || descr != "Descr1" {
+						t.Fatalf("CategoryStore.OnNew: unexpected params: %d, %q, %q", authorID, title, descr)
 					}
 					return 1, nil
 				},
@@ -235,41 +237,41 @@ func TestHandleNewCategory(t *testing.T) {
 		{
 			desc:     "no token",
 			token:    "",
-			body:     `{"title":"Cat1"}`,
+			body:     `{"title":"Cat1","description":"Descr1"}`,
 			wantCode: http.StatusUnauthorized,
 			wantBody: `{"error":{"code":"Unauthorized","message":"Authentication required"}}`,
 		},
 		{
 			desc:     "blocked user token",
-			body:     `{"title":"Cat1"}`,
+			body:     `{"title":"Cat1","description":"Descr1"}`,
 			token:    token2,
 			wantCode: http.StatusUnauthorized,
 			wantBody: `{"error":{"code":"Unauthorized","message":"Authentication required"}}`,
 		},
 		{
 			desc:     "unactivated user token",
-			body:     `{"title":"Cat1"}`,
+			body:     `{"title":"Cat1","description":"Descr1"}`,
 			token:    token3,
 			wantCode: http.StatusForbidden,
 			wantBody: `{"error":{"code":"Forbidden","message":"User name is empty"}}`,
 		},
 		{
 			desc:     "not an admin",
-			body:     `{"title":"Cat1"}`,
+			body:     `{"title":"Cat1","description":"Descr1"}`,
 			token:    token4,
 			wantCode: http.StatusForbidden,
 			wantBody: `{"error":{"code":"Forbidden","message":"Access denied"}}`,
 		},
 		{
 			desc:     "not found user token",
-			body:     `{"title":"Cat1"}`,
+			body:     `{"title":"Cat1","description":"Descr1"}`,
 			token:    token100,
 			wantCode: http.StatusUnauthorized,
 			wantBody: `{"error":{"code":"Unauthorized","message":"Authentication required"}}`,
 		},
 		{
 			desc:     "good token",
-			body:     `{"title":"Cat1"}`,
+			body:     `{"title":"Cat1","description":"Descr1"}`,
 			token:    token1,
 			wantCode: http.StatusCreated,
 			wantBody: `{"id":1}`,
@@ -283,14 +285,14 @@ func TestHandleNewCategory(t *testing.T) {
 		},
 		{
 			desc:     "empty title",
-			body:     `{"title":""}`,
+			body:     `{"title":"","description":"Descr1"}`,
 			token:    token1,
 			wantCode: http.StatusBadRequest,
 			wantBody: `{"error":{"code":"BadRequest","message":"Invalid category title"}}`,
 		},
 		{
 			desc:     "large title",
-			body:     `{"title":"` + strings.Repeat("X", 101) + `"}`,
+			body:     `{"title":"` + strings.Repeat("X", 101) + `","description":"Descr1"}`,
 			token:    token1,
 			wantCode: http.StatusBadRequest,
 			wantBody: `{"error":{"code":"BadRequest","message":"Invalid category title"}}`,
@@ -336,6 +338,7 @@ func TestHandleGetCategory(t *testing.T) {
 							ID:          1,
 							AuthorID:    1,
 							Title:       "Cat1",
+							Description: "Descr1",
 							CreatedAt:   testTime,
 							LastTopicAt: testTime,
 							TopicCount:  10,
@@ -357,7 +360,7 @@ func TestHandleGetCategory(t *testing.T) {
 			desc:     "found",
 			id:       "1",
 			wantCode: http.StatusOK,
-			wantBody: `{"category":{"id":1,"authorId":1,"title":"Cat1","createdAt":"2001-02-03T04:05:06Z","lastTopicAt":"2001-02-03T04:05:06Z","topicCount":10}}`,
+			wantBody: `{"category":{"id":1,"authorId":1,"title":"Cat1","description":"Descr1","createdAt":"2001-02-03T04:05:06Z","lastTopicAt":"2001-02-03T04:05:06Z","topicCount":10}}`,
 		},
 		{
 			desc:     "not found",

@@ -20,22 +20,22 @@ func TestCategory(t *testing.T) {
 		t.Fatalf("failed to create a user: %s", err)
 	}
 
-	cat1, err := s.Categories().New(u1, "cat-1")
+	cat1, err := s.Categories().New(u1, "cat-1", "descr cat-1")
 	if err != nil {
 		t.Fatalf("failed to create a category: %s", err)
 	}
 
-	cat2, err := s.Categories().New(u2, "cat-2")
+	cat2, err := s.Categories().New(u2, "cat-2", "descr cat-2")
 	if err != nil {
 		t.Fatalf("failed to create a category: %s", err)
 	}
 
-	cat3, err := s.Categories().New(u1, "cat-3")
+	cat3, err := s.Categories().New(u1, "cat-3", "descr cat-3")
 	if err != nil {
 		t.Fatalf("failed to create a category: %s", err)
 	}
 
-	cat4, err := s.Categories().New(u2, "cat-4 日本 Доброе утро")
+	cat4, err := s.Categories().New(u2, "cat-4 日本 Доброе утро", "descr cat-4")
 	if err != nil {
 		t.Fatalf("failed to create a category: %s", err)
 	}
@@ -78,10 +78,11 @@ func TestCategory(t *testing.T) {
 	}
 
 	want := &store.Category{
-		ID:        cat3,
-		AuthorID:  u1,
-		Title:     "cat-3",
-		CreatedAt: got.CreatedAt,
+		ID:          cat3,
+		AuthorID:    u1,
+		Title:       "cat-3",
+		Description: "descr cat-3",
+		CreatedAt:   got.CreatedAt,
 	}
 	if !reflect.DeepEqual(got, want) {
 		t.Fatalf("got topic %v, want %v", got, want)
@@ -98,10 +99,32 @@ func TestCategory(t *testing.T) {
 	}
 
 	want = &store.Category{
-		ID:        cat3,
-		AuthorID:  u1,
-		Title:     "new title",
-		CreatedAt: got.CreatedAt,
+		ID:          cat3,
+		AuthorID:    u1,
+		Title:       "new title",
+		Description: "descr cat-3",
+		CreatedAt:   got.CreatedAt,
+	}
+	if !reflect.DeepEqual(got, want) {
+		t.Fatalf("got topic %v, want %v", got, want)
+	}
+
+	err = s.Categories().SetDescription(cat3, "new descr")
+	if err != nil {
+		t.Fatalf("failed to SetDescription: %s", err)
+	}
+
+	got, err = s.Categories().Get(cat3)
+	if err != nil {
+		t.Fatalf("failed to get a category: %s", err)
+	}
+
+	want = &store.Category{
+		ID:          cat3,
+		AuthorID:    u1,
+		Title:       "new title",
+		Description: "new descr",
+		CreatedAt:   got.CreatedAt,
 	}
 	if !reflect.DeepEqual(got, want) {
 		t.Fatalf("got topic %v, want %v", got, want)

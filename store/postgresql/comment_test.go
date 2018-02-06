@@ -17,7 +17,7 @@ func TestComment(t *testing.T) {
 		t.Fatalf("failed to create a user: %s", err)
 	}
 
-	cat1, err := s.Categories().New(u1, "cat-1")
+	cat1, err := s.Categories().New(u1, "cat-1", "descr cat-1")
 	if err != nil {
 		t.Fatalf("failed to create a category: %s", err)
 	}

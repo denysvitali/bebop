@@ -7,6 +7,10 @@ var BebopNewCategory = Vue.component("bebop-new-category", {
           <label for="user-name" class="form-control-label">Title:</label>
           <input type="text" class="form-control" id="category-title-input" @change="hideErrorMessage" @keyup="hideErrorMessage" maxlength="100">
         </div>
+        <div class="form-group">
+          <label for="user-name" class="form-control-label">Description:</label>
+          <textarea class="form-control" id="description-input" @change="hideErrorMessage" @keyup="hideErrorMessage" maxlength="10000"></textarea>
+        </div>
         <div id="form-error" class="alert alert-danger" :class="{hidden: errorMessage===''}" role="alert" style="cursor:pointer" @click="hideErrorMessage">
           {{errorMessage}}
         </div>
@@ -44,10 +48,16 @@ var BebopNewCategory = Vue.component("bebop-new-category", {
         this.showErrorMessage("Invalid category title");
         return;
       }
+      var description = $("#description-input").val().trim();
+      if (description.length < 1 || description.length > 10000) {
+        this.showErrorMessage("Invalid category description");
+        return;
+      }
       this.posting = true;
       this.$http
         .post("api/v1/categories", {
           title: title,
+          description: description,
         })
         .then(
           response => {

@@ -11,7 +11,7 @@ type categoryStore struct {
 	db *sql.DB
 }
 
-func (s *categoryStore) New(authorID int64, title string) (int64, error) {
+func (s *categoryStore) New(authorID int64, title, descr string) (int64, error) {
 	var id int64
 	now := time.Now()
 
@@ -21,8 +21,8 @@ func (s *categoryStore) New(authorID int64, title string) (int64, error) {
 	}
 
 	err = s.db.QueryRow(
-		`insert into categories(author_id, title, created_at, last_topic_at) values ($1, $2, $3, $4) returning id`,
-		authorID, title, now, now,
+		`insert into categories(author_id, title, description, created_at, last_topic_at) values ($1, $2, $3, $4, $5) returning id`,
+		authorID, title, descr, now, now,
 	).Scan(&id)
 	if err != nil {
 		tx.Rollback()
@@ -38,11 +38,11 @@ func (s *categoryStore) New(authorID int64, title string) (int64, error) {
 	return id, nil
 }
 
-const selectFromCategories = `select id, author_id, title, created_at, last_topic_at, topic_count from categories`
+const selectFromCategories = `select id, author_id, title, description, created_at, last_topic_at, topic_count from categories`
 
 func (s *categoryStore) scanCategory(scanner scanner) (*store.Category, error) {
 	c := new(store.Category)
-	err := scanner.Scan(&c.ID, &c.AuthorID, &c.Title, &c.CreatedAt, &c.LastTopicAt, &c.TopicCount)
+	err := scanner.Scan(&c.ID, &c.AuthorID, &c.Title, &c.Description, &c.CreatedAt, &c.LastTopicAt, &c.TopicCount)
 	if err == sql.ErrNoRows {
 		return nil, store.ErrNotFound
 	}
@@ -95,6 +95,11 @@ func (s *categoryStore) GetLatest(offset, limit int) ([]*store.Category, int, er
 
 func (s *categoryStore) SetTitle(id int64, title string) error {
 	_, err := s.db.Exec(`update categories set title=$1 where id=$2`, title, id)
+	return err
+}
+
+func (s *categoryStore) SetDescription(id int64, description string) error {
+	_, err := s.db.Exec(`update categories set description=$1 where id=$2`, description, id)
 	return err
 }
 
