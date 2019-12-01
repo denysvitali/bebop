@@ -58,12 +58,6 @@ type Config struct {
 			SSLRootCert string `hcl:"sslrootcert" envconfig:"BEBOP_STORE_POSTGRESQL_SSLROOTCERT"`
 		} `hcl:"postgresql"`
 
-		MySQL struct {
-			Address  string `hcl:"address" envconfig:"BEBOP_STORE_MYSQL_ADDRESS"`
-			Username string `hcl:"username" envconfig:"BEBOP_STORE_MYSQL_USERNAME"`
-			Password string `hcl:"password" envconfig:"BEBOP_STORE_MYSQL_PASSWORD"`
-			Database string `hcl:"database" envconfig:"BEBOP_STORE_MYSQL_DATABASE"`
-		} `hcl:"mysql"`
 	} `hcl:"store"`
 
 	OAuth struct {
@@ -184,12 +178,6 @@ store {
     sslmode  = "disable"
   }
 
-  mysql {
-    address  = "127.0.0.1:3306"
-    username = ""
-    password = ""
-    database = ""
-  }
 }
 
 oauth {

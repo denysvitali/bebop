@@ -8,7 +8,6 @@ Bebop is a simple discussion board / forum web application.
 - Vue.js-based frontend
 - Two databases are supported: 
   - PostgreSQL
-  - MySQL
 - Three file-storage backends are supported to store user-uploaded files (e.g. avatars):
   - Local filesystem
   - Google Cloud Storage
@@ -24,7 +23,7 @@ Bebop is a simple discussion board / forum web application.
 
 ## Getting Started
 
-  * Create a new empty database (MySQL оr PostgreSQL) that will be used as a data store and a database user with all privileges granted on this database.
+  * Create a new empty database (PostgreSQL) that will be used as a data store and a database user with all privileges granted on this database.
 
   * Obtain OAuth 2.0 credentials (client_id and secret) from at least one of the providers (Google, Facebook, Github) so users can log into the web application. The OAuth callback url will be `<base_url>/oauth/end/<provider>`. The `<base_url>` is where the bebop web app will be mounted on your site and the `<provider>` is the lowercase provider name. For example, if base_url is `https://my.website.com/forum/`, then the oauth callback url for google will be `https://my.website.com/forum/oauth/end/google`.
 

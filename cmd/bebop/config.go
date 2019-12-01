@@ -8,7 +8,6 @@ import (
 	"github.com/disintegration/bebop/config"
 	"github.com/disintegration/bebop/filestorage"
 	"github.com/disintegration/bebop/store"
-	"github.com/disintegration/bebop/store/mysql"
 	"github.com/disintegration/bebop/store/postgresql"
 )
 
@@ -73,13 +72,6 @@ func getFileStorage(cfg *config.Config) (filestorage.FileStorage, error) {
 
 func getStore(cfg *config.Config) (store.Store, error) {
 	switch cfg.Store.Type {
-	case "mysql":
-		return mysql.Connect(
-			cfg.Store.MySQL.Address,
-			cfg.Store.MySQL.Username,
-			cfg.Store.MySQL.Password,
-			cfg.Store.MySQL.Database,
-		)
 	case "postgresql":
 		return postgresql.Connect(
 			cfg.Store.PostgreSQL.Address,
