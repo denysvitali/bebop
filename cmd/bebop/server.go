@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"golang.org/x/oauth2"
 	"net/http"
 	"net/url"
 	"sort"
@@ -121,6 +122,24 @@ func initOAuthProviders(cfg *config.Config, h *oauth.Handler) ([]string, error) 
 			return nil, fmt.Errorf("failed to init github oauth provider: %s", err)
 		}
 		providers = append(providers, "github")
+	}
+	
+	if cfg.OAuth.Oauth.ClientID != "" && cfg.OAuth.Oauth.Secret != "" {
+		err := h.AddCustomProvider("oauth", 
+			&oauth2.Config{
+				ClientID:     cfg.OAuth.Oauth.ClientID,
+				ClientSecret: cfg.OAuth.Oauth.Secret,
+				Endpoint:     oauth2.Endpoint{
+					AuthURL: cfg.OAuth.Oauth.Authorize,
+					TokenURL: cfg.OAuth.Oauth.Token,
+				},
+				RedirectURL:  "",
+				Scopes:       nil,
+			}, cfg.OAuth.Oauth.UserInfo)
+		if err != nil {
+			return nil, fmt.Errorf("failed to init github oauth provider: %s", err)
+		}
+		providers = append(providers, "oauth")
 	}
 
 	return providers, nil

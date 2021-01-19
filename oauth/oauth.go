@@ -54,6 +54,21 @@ func New(config *Config) *Handler {
 	return h
 }
 
+func (h *Handler) AddCustomProvider(name string, config *oauth2.Config, userInfoEndpoint string) error {
+
+	if h.providers == nil {
+		h.providers = make(map[string]*provider)
+	}
+	
+	config.RedirectURL = h.MountURL + "/end/" + name
+
+	h.providers[name] = &provider{
+		config: config,
+		getUser: getOauthUser(userInfoEndpoint),
+	}
+	return nil
+}
+
 // AddProvider adds a new provider to oauth handler.
 func (h *Handler) AddProvider(name, id, secret string) error {
 	pc, ok := providerConfigs[name]
@@ -64,7 +79,6 @@ func (h *Handler) AddProvider(name, id, secret string) error {
 	if id == "" {
 		return fmt.Errorf("oauth: empty client id of provider %q", name)
 	}
-
 	if secret == "" {
 		return fmt.Errorf("oauth: empty client secret of provider %q", name)
 	}

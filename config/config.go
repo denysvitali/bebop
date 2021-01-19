@@ -57,7 +57,6 @@ type Config struct {
 			SSLMode     string `hcl:"sslmode" envconfig:"BEBOP_STORE_POSTGRESQL_SSLMODE"`
 			SSLRootCert string `hcl:"sslrootcert" envconfig:"BEBOP_STORE_POSTGRESQL_SSLROOTCERT"`
 		} `hcl:"postgresql"`
-
 	} `hcl:"store"`
 
 	OAuth struct {
@@ -75,6 +74,14 @@ type Config struct {
 			ClientID string `hcl:"client_id" envconfig:"BEBOP_OAUTH_GITHUB_CLIENT_ID"`
 			Secret   string `hcl:"secret" envconfig:"BEBOP_OAUTH_GITHUB_SECRET"`
 		} `hcl:"github"`
+
+		Oauth struct {
+			ClientID  string `hcl:"client_id" envconfig:"BEBOP_OAUTH_OUATH_CLIENT_ID"`
+			Secret    string `hcl:"secret" envconfig:"BEBOP_OAUTH_OUATH_SECRET"`
+			Authorize string `hcl:"authorize" envconfig:"BEBOP_OAUTH_OAUTH_ENDPOINT`
+			Token     string `hcl:"token" envconfig:"BEBOP_OAUTH_OAUTH_TOKEN`
+			UserInfo  string `hcl:"user_info" envconfig:"BEBOP_OAUTH_OUATH_USER_INFO"`
+		} `hcl:"oauth"`
 	} `hcl:"oauth"`
 }
 

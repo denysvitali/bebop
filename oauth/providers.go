@@ -33,66 +33,34 @@ var providerConfigs = map[string]providerConfig{
 	"google": {
 		endpoint: google.Endpoint,
 		scopes:   []string{"profile"},
-		getUser:  getGoogleUser,
+		getUser:  getOauthUser("https://www.googleapis.com/oauth2/v2/userinfo"),
 	},
 	"facebook": {
 		endpoint: facebook.Endpoint,
 		scopes:   []string{"public_profile"},
-		getUser:  getFacebookUser,
+		getUser:  getOauthUser("https://graph.facebook.com/me?fields=id,name"),
 	},
 	"github": {
 		endpoint: github.Endpoint,
 		scopes:   []string{},
-		getUser:  getGithubUser,
+		getUser:  getOauthUser("https://api.github.com/user"),
 	},
 }
 
-func getGoogleUser(c *http.Client) (*user, error) {
-	url := "https://www.googleapis.com/oauth2/v2/userinfo"
+func getOauthUser(userEndpoint string) func(c *http.Client) (*user, error) {
+	return func(c *http.Client) (*user, error){
+		u := struct {
+			ID   int64  `json:"id"`
+			Name string `json:"name"`
+		}{}
 
-	u := struct {
-		ID   string `json:"id"`
-		Name string `json:"name"`
-	}{}
+		err := getJSON(c, userEndpoint, &u)
+		if err != nil {
+			return nil, err
+		}
 
-	err := getJSON(c, url, &u)
-	if err != nil {
-		return nil, err
+		return &user{id: strconv.FormatInt(u.ID, 10), name: u.Name}, nil
 	}
-
-	return &user{id: u.ID, name: u.Name}, nil
-}
-
-func getFacebookUser(c *http.Client) (*user, error) {
-	url := "https://graph.facebook.com/me?fields=id,name"
-
-	u := struct {
-		ID   string `json:"id"`
-		Name string `json:"name"`
-	}{}
-
-	err := getJSON(c, url, &u)
-	if err != nil {
-		return nil, err
-	}
-
-	return &user{id: u.ID, name: u.Name}, nil
-}
-
-func getGithubUser(c *http.Client) (*user, error) {
-	url := "https://api.github.com/user"
-
-	u := struct {
-		ID   int64  `json:"id"`
-		Name string `json:"name"`
-	}{}
-
-	err := getJSON(c, url, &u)
-	if err != nil {
-		return nil, err
-	}
-
-	return &user{id: strconv.FormatInt(u.ID, 10), name: u.Name}, nil
 }
 
 func getJSON(c *http.Client, url string, v interface{}) error {
